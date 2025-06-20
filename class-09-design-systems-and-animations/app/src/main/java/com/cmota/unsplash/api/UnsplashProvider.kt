@@ -100,4 +100,20 @@ class UnsplashProvider {
       }
     })
   }
+
+  fun fetchPhotoDetails(id: String, cb: UnsplashResult) {
+    retrofit.fetchPhotoDetails(id).enqueue(object : Callback<UnsplashItem> {
+      override fun onResponse(call: Call<UnsplashItem>, response: Response<UnsplashItem>) {
+        val output = response.body()
+        if (response.isSuccessful && output != null) {
+          cb.onDataFetchedSuccess(listOf(output))
+        } else {
+          cb.onDataFetchedFailed("${response.code()}: ${response.errorBody()}")
+        }
+      }
+      override fun onFailure(call: Call<UnsplashItem>, t: Throwable) {
+        cb.onDataFetchedFailed("Error: ${t.message}")
+      }
+    })
+  }
 }

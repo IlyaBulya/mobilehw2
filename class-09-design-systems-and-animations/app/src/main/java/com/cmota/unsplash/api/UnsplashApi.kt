@@ -6,6 +6,7 @@ import com.cmota.unsplash.data.search.SearchResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 private const val CLIENT_ID = "Client-ID"
@@ -24,4 +25,8 @@ interface UnsplashApi {
   @Headers("Authorization: $CLIENT_ID $ACCESS_KEY")
   @GET("collections")
   fun fetchCollections(): Call<List<UnsplashCollectionItem>>
+
+  @Headers("Authorization: $CLIENT_ID $ACCESS_KEY")
+  @GET("photos/{id}")
+  fun fetchPhotoDetails(@Path("id") id: String): Call<UnsplashItem>
 }

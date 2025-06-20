@@ -18,5 +18,27 @@ data class UnsplashItem(
     val updated_at: String?,
     val urls: Urls?,
     val user: User?,
-    val width: Int?
+    val width: Int?,
+    val exif: Exif?,
+    val location: Location?,
+    val views: Int?,
+    val downloads: Int?
+) : Parcelable
+
+@Parcelize
+data class Exif(
+    val make: String?,
+    val model: String?,
+    val name: String?,
+    val exposure_time: String?,
+    val aperture: String?,
+    val focal_length: String?,
+    val iso: Int?
+) : Parcelable
+
+@Parcelize
+data class Location(
+    val name: String?,
+    val city: String?,
+    val country: String?
 ) : Parcelable

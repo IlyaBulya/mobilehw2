@@ -139,7 +139,7 @@ class MainActivity : ComponentActivity() {
                     collections = collections.value,
                     onOpenDetails = {
                       val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                      intent.putExtra("image", it)
+                      intent.putExtra("photo_id", it.id)
                       startActivity(intent)
                     },
                     onSearchAction = {

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -22,86 +23,89 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.cmota.unsplash.R
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
+import com.cmota.unsplash.data.images.UnsplashItem
+import com.cmota.unsplash.data.images.Exif
+import com.cmota.unsplash.data.images.Location
+import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.LazyColumn
 
 @Composable
 fun DetailsScreen(
-  @DrawableRes image: Int,
-  onAction: (Int) -> Unit = {}
+  item: UnsplashItem,
+  onAction: () -> Unit = {}
 ) {
-  Column {
-    Image(
-      painter = painterResource(image),
-      modifier = Modifier
-        .fillMaxWidth()
-        .clickable(onClick = {
-          onAction(image)
-        }),
-      contentScale = ContentScale.Crop,
-      contentDescription = stringResource(R.string.description_bcn_sagrada_familia)
-    )
-
-    Row {
-      AddPhotoInfoRow(
-        title1 = R.string.info_camera,
-        subtitle1 = R.string.info_camera_placeholder,
-
-        title2 = R.string.info_aperture,
-        subtitle2 = R.string.info_aperture_placeholder
+  LazyColumn(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(Color.Black)
+  ) {
+    item {
+      val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+          .data(item.urls?.regular)
+          .build()
       )
-    }
-
-    Row {
-      AddPhotoInfoRow(
-        title1 = R.string.info_focal_length,
-        subtitle1 = R.string.info_focal_length_placeholder,
-        title2 = R.string.info_shutter_speed,
-        subtitle2 = R.string.info_shutter_speed_placeholder
+      Image(
+        painter = painter,
+        modifier = Modifier
+          .fillMaxWidth()
+          .clickable(onClick = onAction),
+        contentScale = ContentScale.Crop,
+        contentDescription = item.description ?: "Photo"
       )
-    }
-
-    Row {
-      AddPhotoInfoRow(
-        title1 = R.string.info_iso,
-        subtitle1 = R.string.info_iso_placeholder,
-        title2 = R.string.info_dimensions,
-        subtitle2 = R.string.info_dimensions_placeholder
-      )
-    }
-
-    HorizontalDivider(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp),
-      thickness = 1.dp,
-      color = Color.LightGray
-    )
-
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Text(stringResource(R.string.info_views))
-
-        Text(stringResource(R.string.info_views_placeholder))
+      Row {
+        AddPhotoInfoRow(
+          title1 = R.string.info_camera,
+          subtitle1 = item.exif?.model ?: "-",
+          title2 = R.string.info_aperture,
+          subtitle2 = item.exif?.aperture ?: "-",
+          textColor = Color.White
+        )
       }
-
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Text(stringResource(R.string.info_downloads))
-
-        Text(stringResource(R.string.info_downloads_placeholder))
+      Row {
+        AddPhotoInfoRow(
+          title1 = R.string.info_focal_length,
+          subtitle1 = item.exif?.focal_length ?: "-",
+          title2 = R.string.info_shutter_speed,
+          subtitle2 = item.exif?.exposure_time ?: "-",
+          textColor = Color.White
+        )
       }
-
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+      Row {
+        AddPhotoInfoRow(
+          title1 = R.string.info_iso,
+          subtitle1 = item.exif?.iso?.toString() ?: "-",
+          title2 = R.string.info_dimensions,
+          subtitle2 = if (item.width != null && item.height != null) "${item.width} x ${item.height}" else "-",
+          textColor = Color.White
+        )
+      }
+      HorizontalDivider(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(16.dp),
+        thickness = 1.dp,
+        color = Color.Gray
+      )
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
       ) {
-        Text(stringResource(R.string.info_likes))
-
-        Text(stringResource(R.string.info_likes_placeholder))
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+          Text(stringResource(R.string.info_views), color = Color.White)
+          Text(item.views?.toString() ?: "-", color = Color.White)
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+          Text(stringResource(R.string.info_downloads), color = Color.White)
+          Text(item.downloads?.toString() ?: "-", color = Color.White)
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+          Text(stringResource(R.string.info_likes), color = Color.White)
+          Text(item.likes?.toString() ?: "-", color = Color.White)
+        }
       }
     }
   }
@@ -110,12 +114,11 @@ fun DetailsScreen(
 @Composable
 fun AddPhotoInfoRow(
   @StringRes title1: Int,
-  @StringRes subtitle1: Int,
-
+  subtitle1: String,
   @StringRes title2: Int,
-  @StringRes subtitle2: Int
+  subtitle2: String,
+  textColor: Color = Color.Unspecified
 ) {
-
   Row(
     modifier = Modifier
       .fillMaxWidth()
@@ -129,13 +132,11 @@ fun AddPhotoInfoRow(
     ) {
       Text(
         text = stringResource(id = title1),
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = textColor
       )
-      Text(
-        text = stringResource(id = subtitle1)
-      )
+      Text(text = subtitle1, color = textColor)
     }
-
     Column(
       modifier = Modifier
         .weight(1f)
@@ -143,11 +144,10 @@ fun AddPhotoInfoRow(
     ) {
       Text(
         text = stringResource(id = title2),
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = textColor
       )
-      Text(
-        text = stringResource(id = subtitle2)
-      )
+      Text(text = subtitle2, color = textColor)
     }
   }
 }
@@ -155,5 +155,39 @@ fun AddPhotoInfoRow(
 @Composable
 @Preview
 fun PreviewDetailsScreen() {
-  DetailsScreen(R.drawable.bcn_la_sagrada_familia)
+  DetailsScreen(
+    item = UnsplashItem(
+      blur_hash = null,
+      color = null,
+      created_at = null,
+      current_user_collections = null,
+      description = "La Sagrada Familia",
+      height = 4032,
+      id = "1",
+      liked_by_user = null,
+      likes = 1234,
+      links = null,
+      updated_at = null,
+      urls = null,
+      user = null,
+      width = 3024,
+      exif = Exif(
+        make = null,
+        model = "Canon EOS R",
+        name = null,
+        exposure_time = "1/200",
+        aperture = "f/2.8",
+        focal_length = "24mm",
+        iso = 100
+      ),
+      location = Location(
+        name = "Barcelona, Spain",
+        city = "Barcelona",
+        country = "Spain"
+      ),
+      views = 123456,
+      downloads = 7890
+    ),
+    onAction = {}
+  )
 }
