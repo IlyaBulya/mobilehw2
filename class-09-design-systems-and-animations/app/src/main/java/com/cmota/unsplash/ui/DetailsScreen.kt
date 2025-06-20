@@ -31,6 +31,12 @@ import com.cmota.unsplash.data.images.Exif
 import com.cmota.unsplash.data.images.Location
 import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyColumn
+import coil3.compose.AsyncImage
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun DetailsScreen(
@@ -56,6 +62,27 @@ fun DetailsScreen(
         contentScale = ContentScale.Crop,
         contentDescription = item.description ?: "Photo"
       )
+      // Автор фото
+      Row(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+      ) {
+        AsyncImage(
+          model = item.user?.profile_image?.medium,
+          contentDescription = item.user?.name ?: "Author",
+          modifier = Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(20.dp)),
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+          text = item.user?.name ?: "-",
+          color = Color.White,
+          fontWeight = FontWeight.Bold
+        )
+      }
       Row {
         AddPhotoInfoRow(
           title1 = R.string.info_camera,
