@@ -1,0 +1,43 @@
+<resources>
+  <string name="app_name">Unsplash</string>
+
+  <string name="main_search_hint">Buscar...</string>
+  <string name="main_tab_images">Imágenes</string>
+  <string name="main_tab_collections">Colecciones</string>
+
+  <string name="bottom_tab_home">Inicio</string>
+  <string name="bottom_tab_about">Acerca de</string>
+
+  <string name="about_info">Esta es una aplicación de demostración que utiliza Jetpack Compose con la API de Unsplash</string>
+
+  <string name="info_camera">Cámara</string>
+  <string name="info_camera_placeholder">NIKON D3200</string>
+
+  <string name="info_aperture">Apertura</string>
+  <string name="info_aperture_placeholder">f/5.0</string>
+
+  <string name="info_focal_length">Distancia Focal</string>
+  <string name="info_focal_length_placeholder">18.0mm</string>
+
+  <string name="info_shutter_speed">Velocidad de Obturación</string>
+  <string name="info_shutter_speed_placeholder">1/125s</string>
+
+  <string name="info_iso">ISO</string>
+  <string name="info_iso_placeholder">100</string>
+
+  <string name="info_dimensions">Dimensiones</string>
+  <string name="info_dimensions_placeholder">3906 x 4882</string>
+
+  <string name="info_views">Vistas</string>
+  <string name="info_views_placeholder">8.8M</string>
+
+  <string name="info_downloads">Descargas</string>
+  <string name="info_downloads_placeholder">99,1K</string>
+
+  <string name="info_likes">Me gusta</string>
+  <string name="info_likes_placeholder">1.8K</string>
+
+  <string name="description_bcn_sagrada_familia">Vista desde la Sagrada Familia</string>
+  <string name="description_image">Esta es una imagen de un monumento de Barcelona</string>
+  <string name="description_search">Ícono de búsqueda</string>
+</resources>
